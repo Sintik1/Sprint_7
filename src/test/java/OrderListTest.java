@@ -9,7 +9,7 @@ public class OrderListTest {
     @DisplayName("Кейс проверки получения списка заказов")
     @Description("Должен вернуться код 200 и в тело ответа должен вернуться список заказов")
     @Test
-    public void getOrderListShouldBeVisible(){
+    public void getOrderListShouldBeVisible() {
         orderClient.getOrderList()
                 .statusCode(SC_OK)
                 .body("orders", Matchers.notNullValue());

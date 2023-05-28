@@ -12,12 +12,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RunWith(Parameterized.class)
-public class OrderParamTest {
+public class OrderParamsTest {
 
     private final CreateOrderRequest createOrderRequest;
     OrderClient orderClient = new OrderClient();
 
-    public OrderParamTest(CreateOrderRequest createOrderRequest) {
+    public OrderParamsTest(CreateOrderRequest createOrderRequest) {
         this.createOrderRequest = createOrderRequest;
     }
 

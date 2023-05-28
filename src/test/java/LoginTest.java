@@ -78,6 +78,7 @@ public class LoginTest {
                 .statusCode(SC_BAD_REQUEST)
                 .body("message", Matchers.equalTo("Недостаточно данных для входа"));
     }
+
     @After
     public void tearDown() {
         if (id != null) {

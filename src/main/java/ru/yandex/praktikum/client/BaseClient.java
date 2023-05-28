@@ -6,7 +6,8 @@ import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 
 public class BaseClient {
-    public static final String BASE_URI= "http://qa-scooter.praktikum-services.ru";
+    public static final String BASE_URI = "http://qa-scooter.praktikum-services.ru";
+
     protected RequestSpecification getSpec() {
         return new RequestSpecBuilder()
                 .log(LogDetail.ALL)

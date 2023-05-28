@@ -7,7 +7,7 @@ import ru.yandex.praktikum.pojo.CreateOrderRequest;
 import static io.restassured.RestAssured.given;
 
 public class OrderClient extends BaseClient {
-    public static final String ORDER_URI="/api/v1/orders";
+    public static final String ORDER_URI = "/api/v1/orders";
 
     @Step("Создание заказа")
     public ValidatableResponse createOrder(CreateOrderRequest createOrderRequest) {
@@ -18,8 +18,9 @@ public class OrderClient extends BaseClient {
                 .post(ORDER_URI)
                 .then();
     }
+
     @Step("Получение списка заказов")
-    public ValidatableResponse getOrderList(){
+    public ValidatableResponse getOrderList() {
         return given()
                 .spec(getSpec())
                 .when()

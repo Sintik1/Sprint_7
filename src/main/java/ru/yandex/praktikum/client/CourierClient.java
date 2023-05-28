@@ -8,9 +8,9 @@ import ru.yandex.praktikum.pojo.LoginCourierRequest;
 import static io.restassured.RestAssured.given;
 
 public class CourierClient extends BaseClient {
-    public static final String CREATE_URI= "/api/v1/courier";
+    public static final String CREATE_URI = "/api/v1/courier";
     public static final String LOGIN_URI = "/api/v1/courier/login";
-    public static final String DELETE_URI="/api/v1/courier/";
+    public static final String DELETE_URI = "/api/v1/courier/";
 
     @Step("Создание курьера")
     public ValidatableResponse createCourier(CreateCourierRequest createCourierRequest) {
@@ -31,6 +31,7 @@ public class CourierClient extends BaseClient {
                 .post(LOGIN_URI)
                 .then();
     }
+
     @Step("Удаление курьера")
     public ValidatableResponse deleteCourier(int id) {
         return given()
@@ -38,6 +39,6 @@ public class CourierClient extends BaseClient {
                 .delete(DELETE_URI + id)
                 .then();
     }
-    }
+}
 
 

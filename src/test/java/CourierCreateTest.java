@@ -11,7 +11,7 @@ import static org.apache.http.HttpStatus.*;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 
-public class CourierTest {
+public class CourierCreateTest {
     private int id;
 
     private CourierClient courierClient = new CourierClient();
