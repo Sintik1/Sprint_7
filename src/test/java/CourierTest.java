@@ -7,6 +7,7 @@ import ru.yandex.praktikum.client.CourierClient;
 import ru.yandex.praktikum.dataprovider.CourierProvider;
 import ru.yandex.praktikum.pojo.CreateCourierRequest;
 import ru.yandex.praktikum.pojo.LoginCourierRequest;
+import static org.apache.http.HttpStatus.*;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 
@@ -20,17 +21,14 @@ public class CourierTest {
     @Test
     public void courierShouldBeCreated() {
         CreateCourierRequest createCourierRequest = CourierProvider.getRandomCreateCourierRequest();
-        courierClient.create(createCourierRequest)
-                .statusCode(201)
+        courierClient.createCourier(createCourierRequest)
+                .statusCode(SC_CREATED)
                 .body("ok", Matchers.equalTo(true));
 
         LoginCourierRequest loginCourierRequest = LoginCourierRequest.from(createCourierRequest);
-        id = courierClient.login(loginCourierRequest)
-                .statusCode(200)
+        id = courierClient.loginCourier(loginCourierRequest)
+                .statusCode(SC_OK)
                 .extract().jsonPath().get("id");
-
-        courierClient.deleteCourier(id)
-                .statusCode(200);
     }
 
     @DisplayName("Кейс проверки, что нельзя создать двух одинаковых курьеров")
@@ -38,9 +36,9 @@ public class CourierTest {
     @Test
     public void repeatedCourierShouldBeCreated() {
         CreateCourierRequest createCourierRequest = CourierProvider.getRandomCreateCourierRequest();
-        courierClient.create(createCourierRequest);
-        courierClient.create(createCourierRequest)
-                .statusCode(409)
+        courierClient.createCourier(createCourierRequest);
+        courierClient.createCourier(createCourierRequest)
+                .statusCode(SC_CONFLICT)
                 .body("message", equalTo("Этот логин уже используется. Попробуйте другой."));
     }
 
@@ -52,8 +50,8 @@ public class CourierTest {
         createCourierRequest.setLogin("");
         createCourierRequest.setPassword("2311");
         createCourierRequest.setFirstName("вцйпйй");
-        courierClient.create(createCourierRequest)
-                .statusCode(400)
+        courierClient.createCourier(createCourierRequest)
+                .statusCode(SC_BAD_REQUEST)
                 .body("message", equalTo("Недостаточно данных для создания учетной записи"));
     }
 
@@ -65,11 +63,19 @@ public class CourierTest {
         createCourierRequest.setLogin("TestLogin");
         createCourierRequest.setPassword("");
         createCourierRequest.setFirstName("вцйпйй");
-        courierClient.create(createCourierRequest)
-                .statusCode(400)
+        courierClient.createCourier(createCourierRequest)
+                .statusCode(SC_BAD_REQUEST)
                 .body("message", equalTo("Недостаточно данных для создания учетной записи"));
     }
+
+    @After
+    public void tearDown() {
+        if (id != 0) {
+            courierClient.deleteCourier(id)
+                    .statusCode(SC_OK);
+        }
     }
+}
 
 
 

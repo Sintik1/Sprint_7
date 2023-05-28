@@ -3,7 +3,7 @@ import io.qameta.allure.junit4.DisplayName;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import ru.yandex.praktikum.client.OrderClient;
-
+import static org.apache.http.HttpStatus.*;
 public class OrderListTest {
     private OrderClient orderClient=new OrderClient();
     @DisplayName("Кейс проверки получения списка заказов")
@@ -11,7 +11,7 @@ public class OrderListTest {
     @Test
     public void getOrderListShouldBeVisible(){
         orderClient.getOrderList()
-                .statusCode(200)
+                .statusCode(SC_OK)
                 .body("orders", Matchers.notNullValue());
     }
 }

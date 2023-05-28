@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import ru.yandex.praktikum.client.OrderClient;
 import ru.yandex.praktikum.pojo.CreateOrderRequest;
+import static org.apache.http.HttpStatus.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -35,7 +36,7 @@ public class OrderParamTest {
     @Test
     public void orderShouldBeCreated() {
         orderClient.createOrder(createOrderRequest)
-                .statusCode(201)
+                .statusCode(SC_CREATED)
                 .body("track", Matchers.notNullValue());
     }
     }

@@ -7,6 +7,7 @@ import ru.yandex.praktikum.client.CourierClient;
 import ru.yandex.praktikum.dataprovider.CourierProvider;
 import ru.yandex.praktikum.pojo.CreateCourierRequest;
 import ru.yandex.praktikum.pojo.LoginCourierRequest;
+import static org.apache.http.HttpStatus.*;
 
 public class LoginTest {
     CourierClient courierClient = new CourierClient();
@@ -17,15 +18,13 @@ public class LoginTest {
     @Test
     public void courierShouldBeLogin() {
         CreateCourierRequest createCourierRequest = new CourierProvider().getRandomCreateCourierRequest();
-        courierClient.create(createCourierRequest);
+        courierClient.createCourier(createCourierRequest);
 
         LoginCourierRequest loginCourierRequest = LoginCourierRequest.from(createCourierRequest);
-        id = courierClient.login(loginCourierRequest)
-                .statusCode(200)
+        id = courierClient.loginCourier(loginCourierRequest)
+                .statusCode(SC_OK)
                 .extract().jsonPath().get("id");
 
-        courierClient.deleteCourier(id)
-                .statusCode(200);
     }
 
     @DisplayName("Кейс проверки что курьер не может залогинится с невалидным паролем")
@@ -34,10 +33,10 @@ public class LoginTest {
     public void courierNoShouldBeLoginInvalidPassword() {
         CreateCourierRequest createCourierRequest = new CourierProvider().getRandomCreateCourierRequest();
         LoginCourierRequest loginCourierRequest = LoginCourierRequest.from(createCourierRequest);
-        courierClient.create(createCourierRequest);
+        courierClient.createCourier(createCourierRequest);
         createCourierRequest.setPassword("invalid_parol");
-        courierClient.login(LoginCourierRequest.from(createCourierRequest))
-                .statusCode(404)
+        courierClient.loginCourier(LoginCourierRequest.from(createCourierRequest))
+                .statusCode(SC_NOT_FOUND)
                 .body("message", Matchers.equalTo("Учетная запись не найдена"));
     }
 
@@ -47,10 +46,10 @@ public class LoginTest {
     public void courierNoShouldBeLoginInvalidLogin() {
         CreateCourierRequest createCourierRequest = new CourierProvider().getRandomCreateCourierRequest();
         LoginCourierRequest loginCourierRequest = LoginCourierRequest.from(createCourierRequest);
-        courierClient.create(createCourierRequest);
+        courierClient.createCourier(createCourierRequest);
         createCourierRequest.setLogin("invalid_login");
-        courierClient.login(LoginCourierRequest.from(createCourierRequest))
-                .statusCode(404)
+        courierClient.loginCourier(LoginCourierRequest.from(createCourierRequest))
+                .statusCode(SC_NOT_FOUND)
                 .body("message", Matchers.equalTo("Учетная запись не найдена"));
     }
 
@@ -60,10 +59,10 @@ public class LoginTest {
     public void courierNoShouldBeLoginNoLogin() {
         CreateCourierRequest createCourierRequest = new CourierProvider().getRandomCreateCourierRequest();
         LoginCourierRequest loginCourierRequest = LoginCourierRequest.from(createCourierRequest);
-        courierClient.create(createCourierRequest);
+        courierClient.createCourier(createCourierRequest);
         createCourierRequest.setLogin("");
-        courierClient.login(LoginCourierRequest.from(createCourierRequest))
-                .statusCode(400)
+        courierClient.loginCourier(LoginCourierRequest.from(createCourierRequest))
+                .statusCode(SC_BAD_REQUEST)
                 .body("message", Matchers.equalTo("Недостаточно данных для входа"));
     }
 
@@ -73,10 +72,17 @@ public class LoginTest {
     public void courierNoShouldBeLoginNoPassword() {
         CreateCourierRequest createCourierRequest = new CourierProvider().getRandomCreateCourierRequest();
         LoginCourierRequest loginCourierRequest = LoginCourierRequest.from(createCourierRequest);
-        courierClient.create(createCourierRequest);
+        courierClient.createCourier(createCourierRequest);
         createCourierRequest.setPassword("");
-        courierClient.login(LoginCourierRequest.from(createCourierRequest))
-                .statusCode(400)
+        courierClient.loginCourier(LoginCourierRequest.from(createCourierRequest))
+                .statusCode(SC_BAD_REQUEST)
                 .body("message", Matchers.equalTo("Недостаточно данных для входа"));
+    }
+    @After
+    public void tearDown() {
+        if (id != null) {
+            courierClient.deleteCourier(id)
+                    .statusCode(SC_OK);
+        }
     }
 }
